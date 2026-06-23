@@ -113,10 +113,12 @@ export const addBoardMember = asyncHandler(async (req, res) =>{
   const user = await User.findOne({ email });
   if(!user) return res.status(404).json({ success: false, message: "User not found" });
 
-  if (board.members.includes(user._id)) {
-    return res.status(400).json({ success: false, message: "User already member" });
-  }
+  const alreadyMember = board.members.some(
+  (memberId) => memberId.toString() === user._id.toString()
+   );
 
+  if (alreadyMember) return res.status(400).json({success: false,message: "User already member"});
+  
   board.members.push(user._id);
   await board.save();
 
@@ -150,7 +152,7 @@ export const getBoardMembers = asyncHandler(async (req, res) => {
 
   const board = await Board.findById(req.params.id).populate( "members","name email role" );
   
-  if (!board) return res.status(404).json({ success: false, message: "Board not found" });
+  if (!board) return res.status(404).json({ success: false, message: "board not found" });
 
   const isMember = board.members.some(
     (m) => m._id.toString() === req.user._id.toString()
