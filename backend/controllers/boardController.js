@@ -35,7 +35,7 @@ export const getSingleBoard = asyncHandler(async (req, res) => {
 
   if (!board)  return res.status(404).json({success: false,message: "Board not found",});
 
-    board.populate("createdBy", "name email role")
+   await  board.populate("createdBy", "name email role")
          .populate("members", "name email role");
 
   
