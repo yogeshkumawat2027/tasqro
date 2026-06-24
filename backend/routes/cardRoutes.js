@@ -9,7 +9,9 @@ const router = express.Router();
 router.post("/:boardId/cards", auth, createCard);
 router.get("/:boardId/cards", auth, getBoardCards);
 
-router.get("/cards/:cardId", auth, getSingleCard);
-router.put("/cards/:cardId", auth, updateCard);
-router.delete("/cards/:cardId", auth, deleteCard);
-router.patch("/cards/:cardId/move", auth, moveCard);
+router.get("/:cardId", auth, getSingleCard);
+router.put("/:cardId", auth, updateCard);
+router.delete("/:cardId", auth, deleteCard);
+router.patch("/:cardId/move", auth, moveCard);
+
+export default router;
