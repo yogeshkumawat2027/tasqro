@@ -16,6 +16,7 @@ function BoardDetails() {
 
   const [board, setBoard] = useState(null);
   const [cards, setCards] = useState([]);
+  const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
@@ -23,9 +24,11 @@ function BoardDetails() {
     try {
       const boardRes = await api.get(`/boards/${id}`);
       const cardsRes = await api.get(`/cards/${id}/cards`);
+      const membersRes = await api.get(`/boards/${id}/members`);
 
       setBoard(boardRes.data.board);
       setCards(cardsRes.data.cards);
+      setMembers(membersRes.data.members);
     } catch (error) {
       console.log(error.response?.data?.message || "Failed to fetch board");
     } finally {
@@ -39,6 +42,14 @@ function BoardDetails() {
 
   const handleCardCreated = (card) => {
     setCards((prev) => [card, ...prev]);
+  };
+
+  const handleMemberAdded = (member) => {
+    setMembers((prev) => [...prev, member]);
+  };
+
+  const handleMemberRemoved = (userId) => {
+    setMembers((prev) => prev.filter((member) => member._id !== userId));
   };
 
   const handleDragEnd = async (event) => {
@@ -95,12 +106,18 @@ function BoardDetails() {
           onOpenCreateCard={() => setIsCreateOpen(true)}
         />
 
-        <BoardMembers boardId={id} />
+        <BoardMembers
+          boardId={id}
+          members={members}
+          onMemberAdded={handleMemberAdded}
+          onMemberRemoved={handleMemberRemoved}
+        />
 
         <CardModal
           isOpen={isCreateOpen}
           onClose={() => setIsCreateOpen(false)}
           boardId={id}
+          members={members}
           onCardCreated={handleCardCreated}
         />
 

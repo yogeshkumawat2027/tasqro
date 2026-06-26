@@ -1,13 +1,14 @@
 import { useState } from "react";
 import api from "../../api/axios";
 
-function CardModal({ isOpen, onClose, boardId, onCardCreated }) {
+function CardModal({ isOpen, onClose, boardId, members = [], onCardCreated }) {
   const [form, setForm] = useState({
     title: "",
     description: "",
     column: "To Do",
     priority: "medium",
     dueDate: "",
+    assignee: "",
   });
 
   const [creating, setCreating] = useState(false);
@@ -29,7 +30,13 @@ function CardModal({ isOpen, onClose, boardId, onCardCreated }) {
     try {
       setCreating(true);
 
-      const res = await api.post(`/cards/${boardId}/cards`, form);
+      const payload = {
+        ...form,
+        assignee: form.assignee || undefined,
+        dueDate: form.dueDate || undefined,
+      };
+
+      const res = await api.post(`/cards/${boardId}/cards`, payload);
 
       onCardCreated(res.data.card);
 
@@ -39,6 +46,7 @@ function CardModal({ isOpen, onClose, boardId, onCardCreated }) {
         column: "To Do",
         priority: "medium",
         dueDate: "",
+        assignee: "",
       });
 
       onClose();
@@ -98,9 +106,24 @@ function CardModal({ isOpen, onClose, boardId, onCardCreated }) {
             onChange={handleChange}
             className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
           >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+
+          <select
+            name="assignee"
+            value={form.assignee}
+            onChange={handleChange}
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+          >
+            <option value="">Select assignee</option>
+
+            {members.map((member) => (
+              <option key={member._id} value={member._id}>
+                {member.name} - {member.email}
+              </option>
+            ))}
           </select>
 
           <input
