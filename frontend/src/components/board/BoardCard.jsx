@@ -1,20 +1,32 @@
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 function BoardCard({ board }) {
   return (
     <Link
       to={`/boards/${board._id}`}
-      className="rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+      className="group flex min-h-48 flex-col rounded-[24px] border border-white/10 bg-zinc-950 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:border-white/25 hover:bg-black hover:shadow-xl hover:shadow-black/25"
     >
-      <h3 className="text-lg font-semibold text-slate-800">{board.title}</h3>
+      <div className="flex items-start justify-between gap-4">
+        <h3 className="line-clamp-2 text-xl font-black leading-6 text-white">
+          {board.title}
+        </h3>
 
-      <p className="mt-2 line-clamp-2 text-sm text-slate-500">
+        <ArrowRight
+          size={20}
+          className="mt-1 shrink-0 text-zinc-500 transition group-hover:translate-x-1 group-hover:text-white"
+        />
+      </div>
+
+      <p className="mt-3 line-clamp-3 text-sm leading-6 text-zinc-400">
         {board.description || "No description"}
       </p>
 
-      <div className="mt-5 flex items-center justify-between text-xs text-slate-400">
-        {/* <span>{board.members?.length || 1} member(s)</span> */}
-        {/* <span>Open →</span> */}
+      <div className="mt-auto pt-5">
+        <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-bold uppercase tracking-[0.14em] text-zinc-400">
+          <span>{board.members?.length || 1} member(s)</span>
+          <span className="text-white">Open</span>
+        </div>
       </div>
     </Link>
   );

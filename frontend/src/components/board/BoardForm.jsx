@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { Plus, X } from "lucide-react";
 import api from "../../api/axios";
 
-function BoardForm({ onBoardCreated }) {
+function BoardForm({ isOpen, onClose, onBoardCreated }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [creating, setCreating] = useState(false);
+
+  if (!isOpen) return null;
 
   const handleCreateBoard = async (e) => {
     e.preventDefault();
@@ -23,44 +26,71 @@ function BoardForm({ onBoardCreated }) {
       setTitle("");
       setDescription("");
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to create board");
+      alert(error.response?.data?.message || "Failed to create workspace");
     } finally {
       setCreating(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleCreateBoard}
-      className="mb-8 rounded-2xl bg-white p-5 shadow-sm"
-    >
-      <h2 className="mb-4 text-lg font-semibold text-slate-800">
-        Create New Board
-      </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+      <form
+        onSubmit={handleCreateBoard}
+        className="w-full max-w-md rounded-[28px] border border-zinc-200 bg-white p-6 shadow-2xl"
+      >
+        <div className="mb-5 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-black text-black">Create Workspace</h2>
+            <p className="mt-1 text-sm leading-6 text-zinc-500">
+              Set up a focused area for a project, sprint, or client delivery.
+            </p>
+          </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Board title"
-          className="rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
-        />
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-500 transition hover:bg-black hover:text-white"
+            title="Close"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
-        <input
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
-          className="rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
-        />
+        <div className="space-y-4">
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Workspace title"
+            className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 text-sm outline-none transition focus:border-black focus:bg-white focus:ring-4 focus:ring-black/10"
+          />
 
-        <button
-          disabled={creating}
-          className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-60"
-        >
-          {creating ? "Creating..." : "Create Board"}
-        </button>
-      </div>
-    </form>
+          <input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description"
+            className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 text-sm outline-none transition focus:border-black focus:bg-white focus:ring-4 focus:ring-black/10"
+          />
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="h-11 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-bold text-zinc-700 transition hover:border-black hover:text-black"
+            >
+              Cancel
+            </button>
+
+            <button
+              disabled={creating}
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-black px-4 text-sm font-bold text-white transition hover:bg-zinc-800 disabled:opacity-60"
+            >
+              <Plus size={18} />
+              {creating ? "Creating..." : "Create"}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 }
 

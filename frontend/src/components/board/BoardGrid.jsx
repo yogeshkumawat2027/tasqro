@@ -1,18 +1,17 @@
 import BoardCard from "./BoardCard";
+import Loader from "../common/Loader";
 
 function BoardGrid({ boards, loading }) {
   if (loading) {
-    return <p className="text-slate-500">Loading boards...</p>;
+    return <Loader text="Loading workspaces..." />;
   }
 
-  if (boards.length === 0){
+  if (boards.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-        <h3 className="text-lg font-semibold text-slate-800">
-          No boards found
-        </h3>
-        <p className="mt-2 text-sm text-slate-500">
-          Create your first board to start managing tasks.
+      <div className="rounded-[28px] border border-dashed border-white/30 bg-white p-12 text-center shadow-[0_24px_80px_rgba(255,255,255,0.08)]">
+        <h3 className="text-xl font-black text-black">No workspaces found</h3>
+        <p className="mt-2 text-sm text-zinc-500">
+          Create your first workspace to start managing tasks.
         </p>
       </div>
     );
