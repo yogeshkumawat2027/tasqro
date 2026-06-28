@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { DndContext } from "@dnd-kit/core";
 
 import api from "../api/axios";
+import socket from "../utils/socket";
+
 import Navbar from "../components/common/Navbar";
 import BoardHeader from "../components/card/BoardHeader";
 import BoardColumn from "../components/card/BoardColumn";
@@ -40,12 +42,85 @@ function BoardDetails() {
     fetchBoardData();
   }, [id]);
 
+  useEffect(() => {
+    socket.connect();
+
+    socket.emit("join-board", id);
+
+    socket.on("card-created", (newCard) => {
+      setCards((prev) => {
+        const alreadyExists = prev.some((card) => card._id === newCard._id);
+        if (alreadyExists) return prev;
+
+        return [newCard, ...prev];
+      });
+    });
+
+    socket.on("card-moved", (updatedCard) => {
+      setCards((prev) =>
+        prev.map((card) =>
+          card._id === updatedCard._id ? updatedCard : card
+        )
+      );
+    });
+
+    socket.on("card-updated", (updatedCard) => {
+      setCards((prev) =>
+        prev.map((card) =>
+          card._id === updatedCard._id ? updatedCard : card
+        )
+      );
+    });
+
+    socket.on("card-deleted", (cardId) => {
+      setCards((prev) => prev.filter((card) => card._id !== cardId));
+    });
+
+    socket.on("member-added", (data) => {
+      setMembers((prev) => {
+        const exists = prev.some((member) => member._id === data.member._id);
+        if (exists) return prev;
+
+        return [...prev, data.member];
+      });
+    });
+
+    socket.on("member-removed", (data) => {
+      setMembers((prev) =>
+        prev.filter((member) => member._id !== data.userId)
+      );
+    });
+
+    return () => {
+      socket.emit("leave-board", id);
+
+      socket.off("card-created");
+      socket.off("card-moved");
+      socket.off("card-updated");
+      socket.off("card-deleted");
+      socket.off("member-added");
+      socket.off("member-removed");
+
+      socket.disconnect();
+    };
+  }, [id]);
+
   const handleCardCreated = (card) => {
-    setCards((prev) => [card, ...prev]);
+    setCards((prev) => {
+      const alreadyExists = prev.some((item) => item._id === card._id);
+      if (alreadyExists) return prev;
+
+      return [card, ...prev];
+    });
   };
 
   const handleMemberAdded = (member) => {
-    setMembers((prev) => [...prev, member]);
+    setMembers((prev) => {
+      const alreadyExists = prev.some((item) => item._id === member._id);
+      if (alreadyExists) return prev;
+
+      return [...prev, member];
+    });
   };
 
   const handleMemberRemoved = (userId) => {
@@ -136,5 +211,4 @@ function BoardDetails() {
     </div>
   );
 }
-
 export default BoardDetails;
