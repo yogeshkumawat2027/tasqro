@@ -71,21 +71,13 @@ function BoardForm({ isOpen, onClose, onBoardCreated }) {
             className="h-12 w-full rounded-xl border border-white/10 bg-zinc-900 px-4 text-sm text-white outline-none transition placeholder:text-zinc-500 focus:border-white/30"
           />
 
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="h-11 rounded-xl border border-white/10 bg-transparent px-4 text-sm font-bold text-zinc-300 transition hover:border-white/25 hover:text-white"
-            >
-              Cancel
-            </button>
-
+          <div className="flex justify-center pt-2">
             <button
               disabled={creating}
-              className="flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-4 text-sm font-bold text-white transition hover:border-zinc-500 hover:bg-zinc-700 disabled:opacity-60"
+              className="flex h-12 min-w-52 items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-6 text-sm font-bold text-white transition hover:border-zinc-500 hover:bg-zinc-700 disabled:opacity-60"
             >
               <Plus size={18} />
-              {creating ? "Creating..." : "Create"}
+              {creating ? "Creating..." : "Create Workspace"}
             </button>
           </div>
         </div>

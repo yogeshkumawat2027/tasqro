@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { DndContext } from "@dnd-kit/core";
+import { ArrowLeft } from "lucide-react";
 
 import api from "../api/axios";
 import socket from "../utils/socket";
@@ -32,7 +33,7 @@ function BoardDetails() {
       setCards(cardsRes.data.cards);
       setMembers(membersRes.data.members);
     } catch (error) {
-      console.log(error.response?.data?.message || "Failed to fetch board");
+      console.log(error.response?.data?.message || "Failed to fetch workspace");
     } finally {
       setLoading(false);
     }
@@ -154,7 +155,7 @@ function BoardDetails() {
         prev.map((card) => (card._id === cardId ? res.data.card : card))
       );
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to move card");
+      alert(error.response?.data?.message || "Failed to move task");
 
       setCards((prev) =>
         prev.map((card) => (card._id === cardId ? currentCard : card))
@@ -164,29 +165,39 @@ function BoardDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-100">
+      <div className="min-h-screen bg-black">
         <Navbar />
-        <p className="p-6 text-slate-500">Loading board...</p>
+        <p className="p-6 text-sm font-medium text-zinc-300">Loading workspace...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-black">
       <Navbar />
 
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <BoardHeader
-          board={board}
-          onOpenCreateCard={() => setIsCreateOpen(true)}
-        />
+      <main className="mx-auto max-w-7xl px-6 pb-6 pt-3">
+        <Link
+          to="/dashboard"
+          className="mb-3 inline-flex items-center gap-2 text-sm font-bold text-zinc-400 transition hover:text-white"
+        >
+          <ArrowLeft size={16} />
+          Back to workspaces
+        </Link>
 
-        <BoardMembers
-          boardId={id}
-          members={members}
-          onMemberAdded={handleMemberAdded}
-          onMemberRemoved={handleMemberRemoved}
-        />
+        <div className="mb-6 rounded-[24px] border border-white/10 bg-zinc-950 p-5 shadow-lg shadow-black/20">
+          <BoardHeader
+            board={board}
+            onOpenCreateCard={() => setIsCreateOpen(true)}
+          />
+
+          <BoardMembers
+            boardId={id}
+            members={members}
+            onMemberAdded={handleMemberAdded}
+            onMemberRemoved={handleMemberRemoved}
+          />
+        </div>
 
         <CardModal
           isOpen={isCreateOpen}

@@ -1,6 +1,6 @@
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
-import { LogOut, Sparkles, X } from "lucide-react";
+import { LogOut, X } from "lucide-react";
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -12,19 +12,17 @@ function Navbar() {
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/95 text-white backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white bg-white text-xs font-black tracking-[0.18em] text-black">
-            TA
-          </div>
+          <img
+            src="/trelloLogo.png"
+            alt="Tasqro logo"
+            className="h-10 w-10 object-contain"
+          />
 
           <div>
             <h1 className="text-lg font-black leading-none tracking-tight text-white">
               Tasqro
             </h1>
 
-            <p className="mt-1 flex items-center gap-1 text-xs font-medium text-zinc-400">
-              <Sparkles size={12} />
-              Premium Task Management
-            </p>
           </div>
         </div>
 

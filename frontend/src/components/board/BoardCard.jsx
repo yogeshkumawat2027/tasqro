@@ -23,9 +23,8 @@ function BoardCard({ board }) {
       </p>
 
       <div className="mt-auto pt-5">
-        <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-bold uppercase tracking-[0.14em] text-zinc-400">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-bold uppercase tracking-[0.14em] text-zinc-400">
           <span>{board.members?.length || 1} member(s)</span>
-          <span className="text-white">Open</span>
         </div>
       </div>
     </Link>

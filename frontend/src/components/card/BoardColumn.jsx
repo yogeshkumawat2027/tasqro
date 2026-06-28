@@ -11,16 +11,14 @@ function BoardColumn({ title, cards }) {
       ref={setNodeRef}
       className={`min-h-[430px] rounded-[28px] border p-4 transition ${
         isOver
-          ? "border-white bg-white shadow-[0_24px_80px_rgba(255,255,255,0.14)]"
+          ? "border-white/35 bg-white/[0.12] shadow-lg shadow-black/20"
           : "border-white/15 bg-white/[0.08]"
       }`}
     >
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className={isOver ? "font-black text-black" : "font-black text-white"}>
-          {title}
-        </h2>
+      <div className="mb-4 flex items-center justify-center gap-3">
+        <h2 className="font-black text-white">{title}</h2>
 
-        <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-black text-zinc-700">
+        <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-xs font-black text-zinc-300">
           {cards.length}
         </span>
       </div>
