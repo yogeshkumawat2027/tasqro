@@ -10,22 +10,34 @@ import boardRoutes from "./routes/boardRoutes.js";
 import cardRoutes from "./routes/cardRoutes.js";
 import { initSocket } from "./socket.js";
 
+dotenv.config();
+
 const PORT = process.env.PORT || 5000;
 const app = express();
 
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://azentrix-fullstack-task2-eta.vercel.app",
+    ...(process.env.FRONTEND_URLS
+        ? process.env.FRONTEND_URLS.split(",").map((origin) => origin.trim())
+        : [])
+];
 
 app.use(
     cors({
-        origin: [
-            "http://localhost:5173",
-            "https://azentrix-fullstack-task2-eta.vercel.app"
-        ],
+        origin(origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+                return;
+            }
+
+            callback(new Error("Not allowed by CORS"));
+        },
         credentials: true,
     })
 );
 app.use(express.json());
 app.use(cookieParser());
-dotenv.config();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/boards", boardRoutes);
@@ -39,8 +51,9 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 initSocket(server);
 
-server.listen(PORT, () => {
+connectDB().then(() => {
+    server.listen(PORT, () => {
 
-    console.log(`Server running on port ${PORT}`);
-    connectDB();
+        console.log(`Server running on port ${PORT}`);
+    });
 });

@@ -3,6 +3,13 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 
+const cookieOptions = {
+  httpOnly: true,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  secure: process.env.NODE_ENV === "production",
+};
+
 export const registerUser = asyncHandler(async(req , res)=>{
 
      const { name, email, password, role } = req.body;
@@ -30,10 +37,7 @@ export const registerUser = asyncHandler(async(req , res)=>{
      );
         
 
-    res.cookie("token", token, {
-        httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    res.cookie("token", token, cookieOptions);
 
     res.status(201).json({success  : true , message : "Registration successful" , user, token});
 
@@ -74,10 +78,7 @@ export const loginUser = asyncHandler( async(req, res) =>{
     }
   );
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000
-  });
+  res.cookie("token", token, cookieOptions);
 
   res.status(200).json({success: true,user , token});
     
@@ -86,7 +87,7 @@ export const loginUser = asyncHandler( async(req, res) =>{
 
 export const logoutUser = asyncHandler( async (req, res)=>{
 
-  res.clearCookie("token");
+  res.clearCookie("token", cookieOptions);
 
   res.status(200).json({success: true,message: "Logout successful" });
 
