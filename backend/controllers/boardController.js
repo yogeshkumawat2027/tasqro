@@ -74,15 +74,7 @@ export const updateBoard = asyncHandler(async (req, res) => {
 
   await board.save();
 
-  const io = getIO();
-  io.to(board._id.toString()).emit("board-updated", board);
-
-  res.status(200).json({
-    success: true,
-    message: "Board updated successfully",
-    board,
   });
-});
 
 export const deleteBoard = asyncHandler(async (req, res) => {
 
