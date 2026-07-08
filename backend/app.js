@@ -1,11 +1,15 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
+
 
 import authRoutes from "./routes/authRoutes.js";
 import boardRoutes from "./routes/boardRoutes.js";
 import cardRoutes from "./routes/cardRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+
+dotenv.config();
 
 const app = express();
 
