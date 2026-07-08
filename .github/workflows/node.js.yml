@@ -23,6 +23,10 @@ jobs:
         node-version: [22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
+    env:
+      NODE_ENV: test
+      JWT_SECRET: test_secret_001
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
