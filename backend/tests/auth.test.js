@@ -11,7 +11,7 @@ describe("Auth APIs", () => {
                 password: "123456",
             });
 
-        console.log(res.body);
+        // console.log(res.body);
 
         expect(res.statusCode).toBe(201);
         expect(res.body.success).toBe(true);
