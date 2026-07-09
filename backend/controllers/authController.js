@@ -10,61 +10,68 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === "production",
 };
 
-export const registerUser = asyncHandler(async(req , res)=>{
+export const registerUser = asyncHandler(async (req, res) => {
 
-     const { name, email, password, role } = req.body;
+  const { name, email, password, role } = req.body;
 
-     if (!name || !email || !password){
-        return res.status(400).json({ success : false , message : "all fileds are required"});
-     }
+  if (!name || !email || !password) {
+    return res.status(400).json({ success: false, message: "all fileds are required" });
+  }
 
-     const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({ email });
 
-     if(existingUser) return res.status(400).json({ success : false , message : "User already exist"});
+  if (existingUser) return res.status(400).json({ success: false, message: "User already exist" });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-        name,
-        email,
-        password : hashedPassword,
-        role 
-    })
+  const user = await User.create({
+    name,
+    email,
+    password: hashedPassword,
+    role
+  })
 
-      const token = jwt.sign(
-           { id: user._id,role: user.role},
-           process.env.JWT_SECRET,{expiresIn: "7d"}
-     );
-        
+  const token = jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET, { expiresIn: "7d" }
+  );
 
-    res.cookie("token", token, cookieOptions);
+  const safeUser = {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
 
-    res.status(201).json({success  : true , message : "Registration successful" , user, token});
+
+  res.cookie("token", token, cookieOptions);
+
+  res.status(201).json({ success: true, message: "Registration successful", user : safeUser, token });
 
 })
 
-export const loginUser = asyncHandler( async(req, res) =>{
+export const loginUser = asyncHandler(async (req, res) => {
 
   const { email, password } = req.body;
 
-  if (!email || !password){
-    return res.status(400).json({success: false,message: "Email and password are required"}); 
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: "Email and password are required" });
   }
 
   const user = await User.findOne({ email });
 
-  if (!user){
-    return res.status(404).json({success: false,message: "user not found"});
+  if (!user) {
+    return res.status(404).json({ success: false, message: "user not found" });
   }
 
-  const isMatch = await bcrypt.compare(password,user.password);
-    
-    
-  
+  const isMatch = await bcrypt.compare(password, user.password);
+
+
+
 
   if (!isMatch) {
-    return res.status(401).json({success: false, message: "Invalid credentials"});
-    
+    return res.status(401).json({ success: false, message: "Invalid credentials" });
+
   }
 
   const token = jwt.sign(
@@ -80,16 +87,16 @@ export const loginUser = asyncHandler( async(req, res) =>{
 
   res.cookie("token", token, cookieOptions);
 
-  res.status(200).json({success: true,user , token});
-    
+  res.status(200).json({ success: true, user, token });
+
 
 });
 
-export const logoutUser = asyncHandler( async (req, res)=>{
+export const logoutUser = asyncHandler(async (req, res) => {
 
   res.clearCookie("token", cookieOptions);
 
-  res.status(200).json({success: true,message: "Logout successful" });
+  res.status(200).json({ success: true, message: "Logout successful" });
 
 });
 
