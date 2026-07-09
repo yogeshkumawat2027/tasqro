@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
-  res.json({ message: "api is running  ..........." });
+  res.json({ message: "api is running" });
 });
 
 app.get("/api/health", (req, res) => {
