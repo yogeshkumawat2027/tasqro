@@ -33,7 +33,7 @@ describe("Auth APIs", () => {
             .send({
                 name: "Another User",
                 email: "test@example.com",
-                password: "123456",
+                password: "1234567",
             });
 
         expect(res.statusCode).toBe(400);
